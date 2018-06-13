@@ -123,14 +123,14 @@ var getObjectKey = function (obj) {
 
 var getTypeValue = function (type) {
   return typeArray[type];
-}
+};
 
 var getType = function () {
   var type = Object.keys(typeArray);
   var typeIndex = randomNumber(0, type.length);
   return type[typeIndex];
 };
- console.log('getType:' + getType());
+// console.log('getType:' + getType());
 
 
 // "rooms": число, случайное количество комнат от 1 до 5
@@ -167,7 +167,7 @@ var getFeatures = function () {
   }
   return features;
 };
- console.log('features:' + getFeatures());
+// console.log('features:' + getFeatures());
 
 
 var getDescription = function () {
@@ -179,7 +179,7 @@ var PHOTOS = [
   'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
-]
+];
 
 var getPhotos = function () {
   return randomShuffleArray(PHOTOS);
@@ -239,7 +239,7 @@ var generateObjectList = function (objNumber) {
   return objectsList;
 };
 var objectsList = generateObjectList(OBJECT_NUMBER);
- console.log(objectsList);
+// console.log(objectsList);
 
 
 document.querySelector('.map').classList.remove('map--faded');
@@ -282,7 +282,7 @@ var renderFeatures = function (features) {
   }
   return featureFragment;
 };
-console.log(renderFeatures(featuresArray));
+// console.log(renderFeatures(featuresArray));
 
 // фотки
 var renderPhotos = function (photos) {
