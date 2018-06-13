@@ -18,7 +18,7 @@ var randomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
-/* почему-то нигде не использовала
+/*
 var randomItemfromArray = function (array) {
   var randomIndex = randomNumber(0, array.length - 1);
   return array[randomIndex];
@@ -102,12 +102,35 @@ var getPrice = randomNumber(MIN_PRICE, MAX_PRICE);
 
 
 // "type": строка с одним из четырёх фиксированных значений: palace, flat, house или bungalo
-var typeArray = ['palace', 'flat', 'house', 'bungalo'];
-var getType = function () {
-  var typeIndex = randomNumber(0, typeArray.length);
-  return typeArray[typeIndex];
+var typeArray = {
+  'palace': 'Дворец',
+  'flat': 'Квартира',
+  'house': 'Дом',
+  'bungalo': 'Бунгало'
 };
-// console.log('getType:' + getType());
+
+/*
+var getObjectKey = function (obj) {
+  var newArray = [];
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      newArray.push(key);
+    }
+  }
+  return newArray;
+}
+*/
+
+var getTypeValue = function (type) {
+  return typeArray[type];
+}
+
+var getType = function () {
+  var type = Object.keys(typeArray);
+  var typeIndex = randomNumber(0, type.length);
+  return type[typeIndex];
+};
+ console.log('getType:' + getType());
 
 
 // "rooms": число, случайное количество комнат от 1 до 5
@@ -135,32 +158,31 @@ var getCheckout = function () {
 
 
 // "features": массив строк случайной длины из ниже предложенных: "wifi", "dishwasher", "parking", "washer", "elevator", "conditioner",
+var featuresArray = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var getFeatures = function () {
-  var featuresArray = [' wifi', ' dishwasher', ' parking', ' washer', ' elevator', ' conditioner'];
-
-  var featuresRandomSort = randomShuffleArray(featuresArray);
-  var featuresSize = randomNumber(1, featuresRandomSort.length);
+  var featuresIndex = randomNumber(1, featuresArray.length);
   var features = [];
-  for (var i = 0; i < featuresSize; i++) {
-    features.push(featuresRandomSort[i]);
+  for (var i = 0; i < featuresIndex; i++) {
+    features.push(featuresArray[i]);
   }
   return features;
 };
-// console.log('features:' + getFeatures());
+ console.log('features:' + getFeatures());
 
 
-// "description": пустая строка
 var getDescription = function () {
   return '';
 };
 
-/*
-"photos": массив из строк "http://o0.github.io/assets/images/tokyo/hotel1.jpg",
-"http://o0.github.io/assets/images/tokyo/hotel2.jpg" и
-"http://o0.github.io/assets/images/tokyo/hotel3.jpg" расположенных в произвольном порядке
-*/
+
+var PHOTOS = [
+  'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
+  'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
+  'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
+]
+
 var getPhotos = function () {
-  return randomItem(['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg']);
+  return randomShuffleArray(PHOTOS);
 };
 // console.log('getPhotos: ' + getPhotos());
 
@@ -217,7 +239,7 @@ var generateObjectList = function (objNumber) {
   return objectsList;
 };
 var objectsList = generateObjectList(OBJECT_NUMBER);
-// console.log(objectsList);
+ console.log(objectsList);
 
 
 document.querySelector('.map').classList.remove('map--faded');
@@ -248,16 +270,19 @@ var makePin = function (objList) {
 makePin(objectsList);
 
 // нужно сделать так, чтобы в obj.offer.type передавались дополнительные значения
+
+//
 var renderFeatures = function (features) {
   var featureFragment = document.createDocumentFragment();
-  for (var i = 0; i < features; i++) {
+  for (var i = 0; i < features.length; i++) {
     var newElement = document.createElement('li');
     newElement.classList.add('popup__feature');
-    newElement.classList.add('popup__feature--' + features);
+    newElement.classList.add('popup__feature--' + features[i]);
     featureFragment.appendChild(newElement);
   }
   return featureFragment;
 };
+console.log(renderFeatures(featuresArray));
 
 // фотки
 var renderPhotos = function (photos) {
@@ -285,7 +310,7 @@ var makeAd = function (obj) {
   adElement.querySelector('.popup__title').textContent = obj.offer.title;
   adElement.querySelector('.popup__text--address').textContent = obj.offer.address;
   adElement.querySelector('.popup__text--price').textContent = obj.offer.price + ' ₽/ночь';
-  adElement.querySelector('.popup__type').textContent = obj.offer.type;
+  adElement.querySelector('.popup__type').textContent = getTypeValue(obj.offer.type);
   adElement.querySelector('.popup__text--capacity').textContent = obj.offer.rooms + ' комнаты для ' + obj.offer.guests + ' гостей';
   adElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + obj.offer.checkin + ', выезд до ' + obj.offer.checkout;
   adElement.querySelector('.popup__features').textContent = '';
@@ -301,5 +326,4 @@ var makeAd = function (obj) {
 var adFragment = document.createDocumentFragment();
 adFragment.appendChild(makeAd(objectsList[0]));
 document.querySelector('.map').insertBefore(adFragment, document.querySelector('.map__filters-container'));
-
 
