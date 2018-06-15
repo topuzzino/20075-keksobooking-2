@@ -18,16 +18,11 @@ var randomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
-/*
-var randomItemfromArray = function (array) {
-  var randomIndex = randomNumber(0, array.length - 1);
-  return array[randomIndex];
-};
-*/
 
 var randomItem = function (items) {
   return items[Math.floor(Math.random() * items.length)];
 };
+
 
 // функция рандомно перемешивает элементы массива, не повторяя их
 var randomShuffleArray = function (arr) {
@@ -49,10 +44,6 @@ var randomShuffleArray = function (arr) {
 };
 
 
-/*
-"author": { "avatar": строка, адрес изображения вида img/avatars/user{{xx}}.png,
-где {{xx}} это число от 1 до 8 с ведущим нулём. Например, 01, 02 и т. д. Адреса изображений не повторяются},
-*/
 var avatarArray = [];
 var getAvatar = function () {
   for (var i = 1; i <= OBJECT_NUMBER; i++) {
@@ -64,14 +55,7 @@ var getAvatar = function () {
 // console.log('getAvatar:' + getAvatar());
 
 
-/*
-"offer": {
-    "title": строка, заголовок предложения, одно из фиксированных значений "Большая уютная квартира",
-    "Маленькая неуютная квартира", "Огромный прекрасный дворец", "Маленький ужасный дворец",
-    "Красивый гостевой домик", "Некрасивый негостеприимный домик", "Уютное бунгало далеко от моря",
-    "Неуютное бунгало по колено в воде". Значения не должны повторяться.
-*/
-var titleArray = [
+var titles = [
   'Большая уютная квартира',
   'Маленькая неуютная квартира',
   'Огромный прекрасный дворец',
@@ -82,26 +66,23 @@ var titleArray = [
   'Неуютное бунгало по колено в воде'
 ];
 
-var getTitle = function () {
+var getTitle = function (titleArray) {
   var titleIndex = randomNumber(0, titleArray.length);
   return titleArray[titleIndex];
 };
 // console.log('getTitle:' + getTitle());
 
 
-// "address": строка, адрес предложения, представляет собой запись вида "{{location.x}}, {{location.y}}", например, "600, 350"
 var getAddress = function (x, y) {
   return x + ', ' + y;
 };
 // console.log('getAddress:' + getAddress(600, 350));
 
 
-// "price": число, случайная цена от 1000 до 1000000
 var getPrice = randomNumber(MIN_PRICE, MAX_PRICE);
 // console.log('getPrice:' + getPrice);
 
 
-// "type": строка с одним из четырёх фиксированных значений: palace, flat, house или bungalo
 var typeArray = {
   'palace': 'Дворец',
   'flat': 'Квартира',
@@ -109,21 +90,11 @@ var typeArray = {
   'bungalo': 'Бунгало'
 };
 
-/*
-var getObjectKey = function (obj) {
-  var newArray = [];
-  for (var key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      newArray.push(key);
-    }
-  }
-  return newArray;
-}
-*/
 
 var getTypeValue = function (type) {
   return typeArray[type];
 };
+
 
 var getType = function () {
   var type = Object.keys(typeArray);
@@ -143,14 +114,14 @@ var getGuests = randomNumber(MIN_ROOMS * 2, MAX_ROOMS * 3);
 // console.log('getGuests:' + getGuests);
 
 
-// "checkin": строка с одним из трёх фиксированных значений: 12:00, 13:00 или 14:00,
+// "checkin": строка с одним из трёх значений: 12:00, 13:00 или 14:00,
 var getCheckin = function () {
   return randomItem(['12:00', '13:00', '14:00']);
 };
 // console.log('getCheckin:' + getCheckin());
 
 
-// "checkout": строка с одним из трёх фиксированных значений: 12:00, 13:00 или 14:00
+// "checkout": строка с одним из трёх значений: 12:00, 13:00 или 14:00
 var getCheckout = function () {
   return randomItem(['12:00', '13:00', '14:00']);
 };
@@ -181,18 +152,20 @@ var PHOTOS = [
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
 
+
 var getPhotos = function () {
   return randomShuffleArray(PHOTOS);
 };
 // console.log('getPhotos: ' + getPhotos());
 
 
-var getLocationX = function () {
-  return randomNumber(MIN_X, MAX_X);
+var getLocationX = function (minx, maxx) {
+  return randomNumber(minx, maxx);
 };
 
-var getLocationY = function () {
-  return randomNumber(MIN_Y, MAX_Y);
+
+var getLocationY = function (miny, maxy) {
+  return randomNumber(miny, maxy);
 };
 // console.log('getLocationX:' + getLocationX() + '; getLocationY:' + getLocationY());
 
@@ -216,7 +189,7 @@ var generateObjectList = function (objNumber) {
       },
 
       'offer': {
-        'title': getTitle(titleArray),
+        'title': getTitle(titles),
         'address': getAddress(locationX, locationY),
         'price': getPrice,
         'type': getType(typeArray),
@@ -269,9 +242,7 @@ var makePin = function (objList) {
 
 makePin(objectsList);
 
-// нужно сделать так, чтобы в obj.offer.type передавались дополнительные значения
 
-//
 var renderFeatures = function (features) {
   var featureFragment = document.createDocumentFragment();
   for (var i = 0; i < features.length; i++) {
@@ -283,6 +254,7 @@ var renderFeatures = function (features) {
   return featureFragment;
 };
 // console.log(renderFeatures(featuresArray));
+
 
 // фотки
 var renderPhotos = function (photos) {
@@ -300,6 +272,7 @@ var renderPhotos = function (photos) {
   }
   return photosFragment;
 };
+
 
 // отрисовывает квартирные карточки с объявами
 var makeAd = function (obj) {
