@@ -215,9 +215,6 @@ var objectsList = generateObjectList(OBJECT_NUMBER);
 // console.log(objectsList);
 
 
-document.querySelector('.map').classList.remove('map--faded');
-
-
 // отрисовывает пины и помещает их на карту
 var makePin = function (objList) {
   // находит шаблон для отрисовки пина на карте
@@ -226,21 +223,20 @@ var makePin = function (objList) {
   // создает контейнер для будущих данных
   var fragment = document.createDocumentFragment();
 
-  objList.forEach(function (obj) {
+  objList.forEach(function (obj, objIndex) {
     var pinElement = similarPin.cloneNode(true);
     var img = pinElement.querySelector('img');
     pinElement.style.left = obj.location.x - img.width / 2 + 'px';
     pinElement.style.top = obj.location.y - img.height + 'px';
     img.src = obj.author.avatar;
     img.alt = obj.offer.title;
+    pinElement.setAttribute('data-ad-number', objIndex);
 
     fragment.appendChild(pinElement);
     pinTemplate.appendChild(fragment);
     // console.log(pinTemplate);
   });
 };
-
-makePin(objectsList);
 
 
 var renderFeatures = function (features) {
@@ -295,8 +291,68 @@ var makeAd = function (obj) {
 
   return adElement;
 };
-
+/*
 var adFragment = document.createDocumentFragment();
-adFragment.appendChild(makeAd(objectsList[0]));
+adFragment.appendChild(makeAd(objectsList));
 document.querySelector('.map').insertBefore(adFragment, document.querySelector('.map__filters-container'));
+*/
 
+// -------------
+
+// неактивное состояние в самом начале
+var map = document.querySelector('.map');
+var mainPin = document.querySelector('.map__pin--main');
+var form = document.querySelector('.ad-form');
+var addressValue = form.querySelector('#address');
+
+var MAIN_PIN_WIDTH = mainPin.querySelector('img').width;
+var MAIN_PIN_HEIGHT = mainPin.querySelector('img').height;
+
+
+var setDefaultAddress = function () {
+  var MAIN_PIN_X = parseInt(mainPin.style.left) - MAIN_PIN_WIDTH / 2;
+  var MAIN_PIN_Y = parseInt(mainPin.style.top) - MAIN_PIN_HEIGHT / 2;
+  // console.log(MAIN_PIN_X, MAIN_PIN_Y);
+  addressValue.value = MAIN_PIN_X + ', ' + MAIN_PIN_Y;
+};
+
+form.classList.add('ad-form--disabled');
+
+
+var activateMap = function () {
+  map.classList.remove('map--faded');
+  form.classList.remove('ad-form--disabled');
+  makePin(objectsList);
+  document.querySelectorAll('form fieldset').disabled = false;
+};
+
+
+var pinContainer = document.querySelector('.map__pins');
+/*
+var hideAd = function () {
+  var oldAd = document.querySelector('.map__card.popup');
+  if (oldAd) {
+    oldAd.pinContainer.removeChild(oldAd);
+  };
+};
+*/
+var closeAd = function () {
+  var popupClose = map.querySelector('.popup__close');
+  popupClose.addEventListener('click', function () {
+    map.querySelector('.map__card').remove();
+  });
+};
+
+var mouseOnPinHandler = function (evt) {
+  var clickedPin = evt.target;
+  var pinId = clickedPin.dataset.adNumber;
+  pinContainer.appendChild(makeAd(objectsList[pinId]));
+  closeAd();
+};
+
+mainPin.addEventListener('mouseup', function (evt) {
+  activateMap(evt);
+  setDefaultAddress();
+});
+
+map.addEventListener('click', mouseOnPinHandler);
