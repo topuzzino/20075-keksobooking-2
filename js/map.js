@@ -232,9 +232,11 @@ var makePin = function (objList) {
     img.alt = obj.offer.title;
     pinElement.setAttribute('data-ad-number', objIndex);
 
+    console.log(pinElement);
+
     fragment.appendChild(pinElement);
     pinTemplate.appendChild(fragment);
-    // console.log(pinTemplate);
+
   });
 };
 
@@ -271,23 +273,22 @@ var renderPhotos = function (photos) {
 
 
 // отрисовывает квартирные карточки с объявами
-var makeAd = function (obj) {
+var makeAd = function (obje) {
   // находит шаблон для отрисовки квартирной карточки
   var adTemplate = document.querySelector('template').content.querySelector('.map__card');
   var adElement = adTemplate.cloneNode(true);
-
-  adElement.querySelector('.popup__title').textContent = obj.offer.title;
-  adElement.querySelector('.popup__text--address').textContent = obj.offer.address;
-  adElement.querySelector('.popup__text--price').textContent = obj.offer.price + ' ₽/ночь';
-  adElement.querySelector('.popup__type').textContent = getTypeValue(obj.offer.type);
-  adElement.querySelector('.popup__text--capacity').textContent = obj.offer.rooms + ' комнаты для ' + obj.offer.guests + ' гостей';
-  adElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + obj.offer.checkin + ', выезд до ' + obj.offer.checkout;
+  adElement.querySelector('.popup__title').textContent = obje.offer.title;
+  adElement.querySelector('.popup__text--address').textContent = obje.offer.address;
+  adElement.querySelector('.popup__text--price').textContent = obje.offer.price + ' ₽/ночь';
+  adElement.querySelector('.popup__type').textContent = getTypeValue(obje.offer.type);
+  adElement.querySelector('.popup__text--capacity').textContent = obje.offer.rooms + ' комнаты для ' + obje.offer.guests + ' гостей';
+  adElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + obje.offer.checkin + ', выезд до ' + obje.offer.checkout;
   adElement.querySelector('.popup__features').textContent = '';
-  adElement.querySelector('.popup__features').appendChild(renderFeatures(obj.offer.features));
-  adElement.querySelector('.popup__description').textContent = obj.offer.description;
+  adElement.querySelector('.popup__features').appendChild(renderFeatures(obje.offer.features));
+  adElement.querySelector('.popup__description').textContent = obje.offer.description;
   adElement.querySelector('.popup__photos').textContent = '';
-  adElement.querySelector('.popup__photos').appendChild(renderPhotos(obj.offer.photos));
-  adElement.querySelector('.popup__avatar').src = obj.author.avatar;
+  adElement.querySelector('.popup__photos').appendChild(renderPhotos(obje.offer.photos));
+  adElement.querySelector('.popup__avatar').src = obje.author.avatar;
 
   return adElement;
 };
@@ -346,7 +347,7 @@ var closeAd = function () {
 var mouseOnPinHandler = function (evt) {
   var clickedPin = evt.target;
   var pinId = clickedPin.dataset.adNumber;
-  pinContainer.appendChild(makeAd(objectsList[pinId]));
+  pinContainer.appendChild(makeAd(objectsList));
   closeAd();
 };
 
