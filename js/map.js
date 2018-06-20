@@ -347,7 +347,7 @@ var closeAd = function () {
 var mouseOnPinHandler = function (evt) {
   var clickedPin = evt.target;
   var pinId = clickedPin.dataset.adNumber;
-  pinContainer.appendChild(makeAd(objectsList));
+  pinContainer.appendChild(makeAd(objectsList[pinId]));
   closeAd();
 };
 
