@@ -45,14 +45,17 @@ var randomShuffleArray = function (arr) {
 
 
 var avatarArray = [];
-var getAvatar = function () {
-  for (var i = 1; i <= OBJECT_NUMBER; i++) {
+for (var i = 1; i <= OBJECT_NUMBER; i++) {
     avatarArray.push('img/avatars/user0' + i + '.png');
-  }
-  var avatarArrayIndex = randomNumber(0, avatarArray.length);
-  return avatarArray[avatarArrayIndex];
+}
+avatarArray = randomShuffleArray(avatarArray);
+// console.log(avatarArray);
+
+var getAvatar = function () {
+  var avatarElement = avatarArray.pop();
+  return avatarElement;
 };
-// console.log('getAvatar:' + getAvatar());
+// console.log(getAvatar());
 
 
 var titles = [
@@ -212,7 +215,7 @@ var generateObjectList = function (objNumber) {
   return objectsList;
 };
 var objectsList = generateObjectList(OBJECT_NUMBER);
-// console.log(objectsList);
+ console.log(objectsList);
 
 
 // отрисовывает пины и помещает их на карту
@@ -220,8 +223,6 @@ var makePin = function (objList) {
   // находит шаблон для отрисовки пина на карте
   var pinTemplate = document.querySelector('.map__pins');
   var similarPin = document.querySelector('template').content.querySelector('.map__pin');
-  // создает контейнер для будущих данных
-  var fragment = document.createDocumentFragment();
 
   objList.forEach(function (obj, objIndex) {
     var pinElement = similarPin.cloneNode(true);
@@ -234,9 +235,10 @@ var makePin = function (objList) {
 
     console.log(pinElement);
 
+    // создает контейнер для будущих данных
+    var fragment = document.createDocumentFragment();
     fragment.appendChild(pinElement);
     pinTemplate.appendChild(fragment);
-
   });
 };
 
@@ -345,7 +347,9 @@ var closeAd = function () {
 };
 
 var mouseOnPinHandler = function (evt) {
+  //evt.preventDefault();
   var clickedPin = evt.target;
+  //console.log(clickedPin);
   var pinId = clickedPin.dataset.adNumber;
   pinContainer.appendChild(makeAd(objectsList[pinId]));
   closeAd();
@@ -355,5 +359,4 @@ mainPin.addEventListener('mouseup', function (evt) {
   activateMap(evt);
   setDefaultAddress();
 });
-
 map.addEventListener('click', mouseOnPinHandler);
