@@ -44,6 +44,18 @@ var randomShuffleArray = function (arr) {
 };
 
 
+function getUserAvatar (index) {
+  return 'img/avatars/user0' + index + '.png';
+}
+function getSchuffledAvatarArray (count) {
+  var avatars = [];
+  for (var i = 1; i <= count; i++) {
+    avatars.push(getUserAvatar(i));
+  }
+  return randomShuffleArray(avatars);
+}
+
+/*
 var avatarArray = [];
 for (var i = 1; i <= OBJECT_NUMBER; i++) {
     avatarArray.push('img/avatars/user0' + i + '.png');
@@ -56,7 +68,7 @@ var getAvatar = function () {
   return avatarElement;
 };
 // console.log(getAvatar());
-
+*/
 
 var titles = [
   'Большая уютная квартира',
@@ -175,6 +187,7 @@ var getLocationY = function (miny, maxy) {
 
 // функция генерирует объекты в ходе цикла
 var generateObjectList = function (objNumber) {
+  var shuffledAvatarArray = getSchuffledAvatarArray(objNumber);
   var objectsList = [];
   var objectItem = {};
 
@@ -188,7 +201,7 @@ var generateObjectList = function (objNumber) {
 
     objectItem = {
       'author': {
-        'avatar': getAvatar()
+        'avatar': shuffledAvatarArray[i]
       },
 
       'offer': {
@@ -215,7 +228,7 @@ var generateObjectList = function (objNumber) {
   return objectsList;
 };
 var objectsList = generateObjectList(OBJECT_NUMBER);
- console.log(objectsList);
+// console.log(objectsList);
 
 
 // отрисовывает пины и помещает их на карту
@@ -232,8 +245,6 @@ var makePin = function (objList) {
     img.src = obj.author.avatar;
     img.alt = obj.offer.title;
     pinElement.setAttribute('data-ad-number', objIndex);
-
-    console.log(pinElement);
 
     // создает контейнер для будущих данных
     var fragment = document.createDocumentFragment();
@@ -347,16 +358,20 @@ var closeAd = function () {
 };
 
 var mouseOnPinHandler = function (evt) {
-  //evt.preventDefault();
+  evt.preventDefault();
   var clickedPin = evt.target;
-  //console.log(clickedPin);
   var pinId = clickedPin.dataset.adNumber;
-  pinContainer.appendChild(makeAd(objectsList[pinId]));
-  closeAd();
+  if (objectsList[pinId]) {
+    pinContainer.appendChild(makeAd(objectsList[pinId]));
+    closeAd();
+  }
+  //console.log(clickedPin);
+
 };
 
-mainPin.addEventListener('mouseup', function (evt) {
+mainPin.addEventListener('click', function (evt) {
   activateMap(evt);
   setDefaultAddress();
 });
-map.addEventListener('click', mouseOnPinHandler);
+
+pinContainer.addEventListener('click', mouseOnPinHandler);
