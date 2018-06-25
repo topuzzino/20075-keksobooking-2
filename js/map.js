@@ -44,10 +44,10 @@ var randomShuffleArray = function (arr) {
 };
 
 
-function getUserAvatar (index) {
+function getUserAvatar(index) {
   return 'img/avatars/user0' + index + '.png';
 }
-function getSchuffledAvatarArray (count) {
+function getSchuffledAvatarArray(count) {
   var avatars = [];
   for (var i = 1; i <= count; i++) {
     avatars.push(getUserAvatar(i));
@@ -324,8 +324,8 @@ var MAIN_PIN_HEIGHT = mainPin.querySelector('img').height;
 
 
 var setDefaultAddress = function () {
-  var MAIN_PIN_X = parseInt(mainPin.style.left) - MAIN_PIN_WIDTH / 2;
-  var MAIN_PIN_Y = parseInt(mainPin.style.top) - MAIN_PIN_HEIGHT / 2;
+  var MAIN_PIN_X = parseInt(mainPin.style.left, 10) - MAIN_PIN_WIDTH / 2;
+  var MAIN_PIN_Y = parseInt(mainPin.style.top, 10) - MAIN_PIN_HEIGHT / 2;
   // console.log(MAIN_PIN_X, MAIN_PIN_Y);
   addressValue.value = MAIN_PIN_X + ', ' + MAIN_PIN_Y;
 };
@@ -365,7 +365,7 @@ var mouseOnPinHandler = function (evt) {
     pinContainer.appendChild(makeAd(objectsList[pinId]));
     closeAd();
   }
-  //console.log(clickedPin);
+  // console.log(clickedPin);
 
 };
 
@@ -375,3 +375,89 @@ mainPin.addEventListener('click', function (evt) {
 });
 
 pinContainer.addEventListener('click', mouseOnPinHandler);
+
+
+// -------------
+
+
+// синхронизация полей ввода типа аппартаментов и их мин цены
+var flatType = document.getElementById('type');
+var flatPrice = document.getElementById('price');
+
+var minPrice = [0, 1000, 5000, 10000];
+var flatTypeArray = Array.from(flatType.options);
+// console.log(flatTypeArray);
+
+var getMinPriceToType = function () {
+  // var currentType = flatType.value;
+  // console.log(currentType);
+
+  flatTypeArray.forEach(function (option, index) {
+    if (option.selected) {
+      flatPrice.min = minPrice[index];
+      flatPrice.placeholder = minPrice[index];
+    }
+  });
+};
+
+getMinPriceToType();
+
+flatType.addEventListener('change', getMinPriceToType);
+
+
+// синхронизация полей чекина и чекаута
+var checkin = document.getElementById('timein');
+var checkout = document.getElementById('timeout');
+
+checkin.addEventListener('change', function () {
+  checkout.value = checkin.value;
+});
+
+checkout.addEventListener('change', function () {
+  checkin.value = checkout.value;
+});
+
+
+// синхронизация поля "количество комнат" с полем "Количество мест"
+var roomNumber = document.getElementById('room_number');
+var guestNumber = document.getElementById('capacity');
+
+/*
+roomNumber.value = 1; -> guestNumber.value = 1
+roomNumber.value = 2; -> guestNumber.value = 1 && 2;
+roomNumber.value = 3; -> guestNumber.value = 1 && 2 && 3;
+roomNumber.value = 100; -> guestNumber.value = 0;
+*/
+
+var roomNumberToCapacity = {
+  '1': ['1'],
+  '2': ['1', '2'],
+  '3': ['1', '2', '3'],
+  '100': ['0']
+};
+
+var getRoomGuestsSynch = function () {
+  // var roomArray = Array.from(roomNumber.options);
+  var capacityArray = Array.from(guestNumber.options);
+
+  var currentRoom = roomNumber.value;
+  // console.log('currentRoom: ' + currentRoom);
+  // var currentGuests = guestNumber.value;
+  // console.log('currentGuests: ' + currentGuests);
+
+  var maxCapacity = roomNumberToCapacity[currentRoom];
+  // console.log('maxCapacity: ' + maxCapacity);
+
+  capacityArray.forEach(function (option) {
+    if (maxCapacity.includes(option.value)) {
+      option.disabled = false;
+      option.selected = true;
+    } else {
+      option.selected = false;
+      option.disabled = true;
+    }
+  });
+};
+getRoomGuestsSynch();
+roomNumber.addEventListener('change', getRoomGuestsSynch);
+// guestNumber.addEventListener('change', );
