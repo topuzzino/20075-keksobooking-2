@@ -346,10 +346,10 @@ var closeAd = function () {
   var popup = map.querySelector('.map__card');
   var popupClose = popup.querySelector('.popup__close');
 
-  map.removeChild(popup);
+  // map.removeChild(popup);
   popupClose.addEventListener('click', function () {
     popupClose.parentElement.remove();
-    //map.querySelector('.map__card').remove();
+    // map.querySelector('.map__card').remove();
   });
 };
 
@@ -358,7 +358,7 @@ var deleteOldAd = function () {
   if (oldAd) {
     oldAd.remove();
   }
-}
+};
 
 var mouseOnPinHandler = function (evt) {
   evt.preventDefault();
@@ -469,10 +469,10 @@ roomNumber.addEventListener('change', getRoomGuestsSynch);
 var mainPinArrow = 22;
 var mainPinFullHeight = MAIN_PIN_HEIGHT + mainPinArrow;
 
-var topBoundary = 100;
-var bottomBoundary = 625;
-var rightBoundary = 715;
-var leftBoundary = -30;
+var TOP_BORDER = 130 - mainPinFullHeight;
+var BOTTOM_BORDER = 630;
+var RIGHT_BORDER = map.offsetWidth;
+var LEFT_BORDER = 150;
 
 mainPin.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
@@ -497,8 +497,10 @@ mainPin.addEventListener('mousedown', function (evt) {
       y: moveEvt.clientY
     };
 
-    mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
-    mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
+    if (startCoord.x >= LEFT_BORDER && startCoord.x <= RIGHT_BORDER && startCoord.y >= TOP_BORDER && startCoord.y <= BOTTOM_BORDER) {
+      mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
+      mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
+    }
 
     setDefaultAddress();
   };
@@ -511,7 +513,7 @@ mainPin.addEventListener('mousedown', function (evt) {
 
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
-  }
+  };
 
   document.addEventListener('mousemove', onMouseMove);
   document.addEventListener('mouseup', onMouseUp);
