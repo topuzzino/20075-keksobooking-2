@@ -362,7 +362,11 @@ var deleteOldAd = function () {
 
 var mouseOnPinHandler = function (evt) {
   evt.preventDefault();
-  var clickedPin = evt.target;
+  //debugger
+  var clickedPin = evt.target.parentNode;
+  if (clickedPin.className !== 'map__pin') {
+    clickedPin.childElement === 'map__pin';
+  }
   if (clickedPin) {
     deleteOldAd();
   }
@@ -371,7 +375,6 @@ var mouseOnPinHandler = function (evt) {
     pinContainer.appendChild(makeAd(objectsList[pinId]));
     closeAd();
   }
-  // console.log(clickedPin);
 };
 
 
