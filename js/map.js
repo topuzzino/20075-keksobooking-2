@@ -316,7 +316,8 @@ var mouseOnPinHandler = function (evt) {
 
 pinContainer.addEventListener('click', mouseOnPinHandler);
 
-pinContainer.addEventListener('keydown', function (evt) {
+document.addEventListener('keydown', function (evt) {
+  console.log('kria');
   if (evt.keyCode === ESC_KEYCODE) {
     deleteOldAd();
   }
