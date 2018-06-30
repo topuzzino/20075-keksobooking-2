@@ -303,7 +303,7 @@ var mouseOnPinHandler = function (evt) {
   evt.preventDefault();
   var clickedPin = evt.target.closest('.map__pin:not(.map__pin--main)');
   if (clickedPin) {
-    clickedPin.classList.add('map__pin--active');
+    // clickedPin.classList.add('map__pin--active');
     deleteOldAd();
     var pinId = clickedPin.dataset.adNumber;
     if (objectsList[pinId]) {
@@ -313,15 +313,14 @@ var mouseOnPinHandler = function (evt) {
   }
 };
 
-map.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
-    closeAd();
-  }
-});
-
 
 pinContainer.addEventListener('click', mouseOnPinHandler);
 
+pinContainer.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    deleteOldAd();
+  }
+});
 
 // -------------
 
