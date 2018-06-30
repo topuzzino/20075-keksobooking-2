@@ -408,9 +408,11 @@ var mainPinArrow = 22;
 var mainPinFullHeight = MAIN_PIN_HEIGHT + mainPinArrow;
 
 var TOP_BORDER = 130 - mainPinFullHeight;
-var BOTTOM_BORDER = 630;
-var RIGHT_BORDER = map.offsetWidth;
-var LEFT_BORDER = 150;
+var BOTTOM_BORDER = 630 - mainPinFullHeight;
+
+var LEFT_BORDER = map.offsetLeft + MAIN_PIN_WIDTH / 2;
+var RIGHT_BORDER = map.offsetLeft + map.clientWidth - MAIN_PIN_WIDTH / 2;
+
 
 mainPin.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
