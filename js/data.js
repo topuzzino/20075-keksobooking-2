@@ -43,37 +43,9 @@
 
   var featuresArray = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 
-  /*
-  // функция получает рандомное число между min и max
-  var randomNumber = function (min, max) {
-    return Math.floor(Math.random() * (max - min)) + min;
-  };
-
-
-  var randomItem = function (items) {
-    return items[Math.floor(Math.random() * items.length)];
-  };
-
-
-  // функция рандомно перемешивает элементы массива, не повторяя их
-  var randomShuffleArray = function (arr) {
-    var m = arr.length;
-    var t;
-    var i;
-
-    // While there remain elements to shuffle …
-    while (m) {
-      // Pick a remaining element …
-      i = Math.floor(Math.random() * m--);
-
-      // And swap it with the current element
-      t = arr[m];
-      arr[m] = arr[i];
-      arr[i] = t;
+  function getTypeValue (type) {
+      return typeArray[type];
     }
-    return arr;
-  };
-  */
 
   function getUserAvatar(index) {
     return 'img/avatars/user0' + index + '.png';
@@ -175,9 +147,7 @@
   window.data = {
     objectsList: objectsList,
     ESC_KEYCODE: ESC_KEYCODE,
-    getTypeValue: function (type) {
-      return typeArray[type];
-    }
+    getTypeValue: getTypeValue
   };
 
 })();
