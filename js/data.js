@@ -44,9 +44,9 @@
   /*
   var featuresArray = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
   */
-  function getTypeValue (type) {
-      return typeArray[type];
-    }
+  function getTypeValue(type) {
+    return typeArray[type];
+  }
   /*
   function getUserAvatar(index) {
     return 'img/avatars/user0' + index + '.png';

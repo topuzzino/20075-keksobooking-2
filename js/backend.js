@@ -28,23 +28,23 @@
     xhr.timeout = 10000; // 10s
 
     return xhr;
-  }
+  };
 
   // Функция получения данных с сервера
-  function load (onLoad, onError) {
-    var xhr = setup (onLoad, onError);
+  function load(onLoad, onError) {
+    var xhr = setup(onLoad, onError);
 
     xhr.open('GET', LOAD_URL);
     xhr.send();
-  };
+  }
 
 
   // Функция для отправки данных на сервер
-  function upload (data, onLoad, onError) {
-    var xhr = setup (onLoad, onError);
+  function upload(data, onLoad, onError) {
+    var xhr = setup(onLoad, onError);
     xhr.open('POST', UPLOAD_URL);
     xhr.send(data);
-  };
+  }
 
   /*
   var upload = function (data, onLoad, onError) {
@@ -78,5 +78,5 @@
   window.backend = {
     load: load,
     upload: upload
-  }
+  };
 })();

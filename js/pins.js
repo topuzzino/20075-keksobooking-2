@@ -202,5 +202,5 @@
 
   window.pins = {
     form: form
-  }
+  };
 })();
