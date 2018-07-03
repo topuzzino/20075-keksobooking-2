@@ -31,6 +31,16 @@
     return arr;
   };
 
+  var errorObject = function (message) {
+    var errorRect = document.createElement('div');
+    var errorText = document.createElement('p');
+    var errorButton = document.createElement('button');
+    errorText.textContent = message;
+    errorButton.textContent = 'OK';
+    errorRect.style = 'width: 200px; height: 100px; background-color: white; color: black; border: 3px solid red; text-align: center';
+    document.body.insertAdjacentElement('afterbegin', errorRect);
+  }
+
 
   window.utils = {
     randomNumber: randomNumber,

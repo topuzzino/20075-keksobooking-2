@@ -2,6 +2,7 @@
 
 (function () {
 
+  /*
   var OBJECT_NUMBER = 8;
   var MIN_PRICE = 1000;
   var MAX_PRICE = 1000000;
@@ -13,10 +14,10 @@
 
   var MIN_Y = 130;
   var MAX_Y = 630;
-
+  */
   var ESC_KEYCODE = 27;
 
-
+  /*
   var TITLES = [
     'Большая уютная квартира',
     'Маленькая неуютная квартира',
@@ -33,20 +34,20 @@
     'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
     'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
   ];
-
+  */
   var typeArray = {
     'palace': 'Дворец',
     'flat': 'Квартира',
     'house': 'Дом',
     'bungalo': 'Бунгало'
   };
-
+  /*
   var featuresArray = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-
+  */
   function getTypeValue (type) {
       return typeArray[type];
     }
-
+  /*
   function getUserAvatar(index) {
     return 'img/avatars/user0' + index + '.png';
   }
@@ -96,7 +97,17 @@
   var getPhotos = function (photos) {
     return window.utils.randomShuffleArray(photos);
   };
+  */
 
+  var objectsList = [];
+
+  var generateObjectList = function (data) {
+    data.forEach(function (objectItem) {
+      objectsList.push(objectItem);
+    });
+  };
+
+  /*
   // функция генерирует объекты в ходе цикла
   var generateObjectList = function (objNumber) {
     var shuffledAvatarArray = getSchuffledAvatarArray(objNumber);
@@ -143,6 +154,9 @@
     return objectsList;
   };
   var objectsList = generateObjectList(OBJECT_NUMBER);
+  */
+
+  window.backend.load(generateObjectList, window.utils.errorObject);
 
   window.data = {
     objectsList: objectsList,

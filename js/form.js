@@ -64,4 +64,13 @@
   };
   getRoomGuestsSynch();
   roomNumber.addEventListener('change', getRoomGuestsSynch);
+
+  window.pins.form.addEventListener('submit', function (evt) {
+    window.backend.upload(new FormData(form), function () {
+      form.reset();
+    }, function (message) {
+      window.utils.errorObject(message);
+    });
+    evt.preventDefault();
+  });
 })();
