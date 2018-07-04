@@ -199,4 +199,8 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
+
+  window.pins = {
+    form: form
+  };
 })();
