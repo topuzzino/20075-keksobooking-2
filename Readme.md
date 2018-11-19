@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Евгения Герцовская](https://up.htmlacademy.ru/javascript/14/user/20075).
-* Наставник: [Екатерина Кащенко](https://htmlacademy.ru/profile/id109008).
+* Наставник: Никто.
 
 ---
 
