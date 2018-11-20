@@ -51,20 +51,23 @@ var getArrayLength = function (array) {
 };
 
 // We are forming here an array of avatars and mix them
-var avatars = [];
-for (var i = 1; i <= ADS_AMOUNT; i++) {
-  if (i < 10) {
-    avatars.push('0' + i);
-  } else {
-    avatars.push('' + i);
+var getAvatarsArray = function () {
+  var avatars = [];
+  for (var i = 1; i <= ADS_AMOUNT; i++) {
+    if (i < 10) {
+      avatars.push('0' + i);
+    } else {
+      avatars.push('' + i);
+    }
   }
-}
-avatars.sort(compareRandom);
+  return avatars.sort(compareRandom);
+};
+
+var avatars = getAvatarsArray();
 
 // Finding the map in DOM and show it
 var mapElement = document.querySelector('.map');
 mapElement.classList.remove('map--faded');
-
 
 // Finding the block, where we'll be putting the elements and templates
 var mapPinsList = document.querySelector('.map__pins');
@@ -73,47 +76,53 @@ var mapPinTemplate = document.querySelector('template').content.querySelector('.
 var mapCardTemplate = document.querySelector('template').content.querySelector('.map__card');
 var photoTemplate = document.querySelector('template').content.querySelector('.popup__photo');
 
-
 // Mixing the names in random order, we don't need them repeat
 var adTitle = OFFER_TITLES.sort(compareRandom);
 
 // Forming the array of our ads
-var advertisments = [];
-for (var i = 0; i < ADS_AMOUNT; i++) {
-  var locationX = getRandomNumber(LOCATION_MIN_X, LOCATION_MAX_X);
-  var locationY = getRandomNumber(LOCATION_MIN_Y, LOCATION_MAX_Y);
-  advertisments.push({
-    author: {
-      avatar: AVATAR_PATH + avatars[i] + AVATAR_FILE_TYPE
-    },
-    offer: {
-      title: adTitle[i],
-      address: (locationX + ', ' + locationY),
-      price: getRandomNumber(MIN_PRICE, MAX_PRICE),
-      type: getRandomElement(OFFER_TYPES),
-      rooms: getRandomNumber(MIN_ROOMS, MAX_ROOMS),
-      guests: getRandomNumber(MIN_GUESTS, MAX_GUESTS),
-      checkin: getRandomElement(CHECK_TIMES),
-      checkout: getRandomElement(CHECK_TIMES),
-      features: getArrayLength(FEATURES),
-      description: '',
-      photos: PHOTOS.sort(compareRandom)
-    },
-    location: {
-      x: locationX,
-      y: locationY
-    }
-  });
-}
+var createAdvertismentsArray = function (advertismentsCount) {
+  var advertisments = [];
+  for (var i = 0; i < ADS_AMOUNT; i++) {
+    var locationX = getRandomNumber(LOCATION_MIN_X, LOCATION_MAX_X);
+    var locationY = getRandomNumber(LOCATION_MIN_Y, LOCATION_MAX_Y);
 
+    advertisments.push({
+      author: {
+        avatar: AVATAR_PATH + avatars[i] + AVATAR_FILE_TYPE
+      },
+      offer: {
+        title: adTitle[i],
+        address: (locationX + ', ' + locationY),
+        price: getRandomNumber(MIN_PRICE, MAX_PRICE),
+        type: getRandomElement(OFFER_TYPES),
+        rooms: getRandomNumber(MIN_ROOMS, MAX_ROOMS),
+        guests: getRandomNumber(MIN_GUESTS, MAX_GUESTS),
+        checkin: getRandomElement(CHECK_TIMES),
+        checkout: getRandomElement(CHECK_TIMES),
+        features: getArrayLength(FEATURES),
+        description: '',
+        photos: PHOTOS.sort(compareRandom)
+      },
+      location: {
+        x: locationX,
+        y: locationY
+      }
+    });
+  }
+  return advertisments;
+};
+
+var advertisments = createAdvertismentsArray(ADS_AMOUNT);
 
 // Function for creating pins for the map with the data from the array
 var renderMapPin = function (mapPin) {
   var mapPinElement = mapPinTemplate.cloneNode(true);
+
   mapPinElement.style.left = mapPin.location.x - PIN_WIDTH / 2 + 'px';
   mapPinElement.style.top = mapPin.location.y - PIN_HEIGHT + 'px';
   mapPinElement.querySelector('img').src = mapPin.author.avatar;
   mapPinElement.querySelector('img').alt = mapPin.offer.title;
+
   return mapPinElement;
 };
 
@@ -127,6 +136,22 @@ var renderMapPinsList = function () {
 };
 
 renderMapPinsList();
+
+// Function for translating the flat types
+var translateType = function (type) {
+  switch (type) {
+    case 'flat':
+      return 'Квартира';
+    case 'bungalo':
+      return 'Бунгало';
+    case 'house':
+      return 'Дом';
+    case 'palace':
+      return 'Дворец';
+    default:
+      return type;
+  }
+};
 
 // Function for creating list of features
 var renderFeaturesList = function (featuresList) {
@@ -157,16 +182,8 @@ var renderMapCard = function (mapCard) {
   mapCardElement.querySelector('.popup__title').textContent = mapCard.offer.title;
   mapCardElement.querySelector('.popup__text--address').textContent = mapCard.offer.address;
   mapCardElement.querySelector('.popup__text--price').textContent = mapCard.offer.price + PRICE_TEXT;
-  var offerType = mapCardElement.querySelector('.popup__type');
-  if (mapCard.offer.type === 'flat') {
-    offerType.textContent = 'Квартира';
-  } else if (mapCard.offer.type === 'bungalo') {
-    offerType.textContent = 'Бунгало';
-  } else if (mapCard.offer.type === 'house') {
-    offerType.textContent = 'Дом';
-  } else {
-    offerType.textContent = 'Дворец';
-  }
+
+  mapCardElement.querySelector('.popup__type').textContent = translateType(mapCard.offer.type);
   mapCardElement.querySelector('.popup__text--capacity').textContent = mapCard.offer.rooms + ROOMS_TEXT + mapCard.offer.guests + GUESTS_TEXT;
   mapCardElement.querySelector('.popup__text--time').textContent = CHECKIN_TEXT + mapCard.offer.checkin + CHECKOUT_TEXT + mapCard.offer.checkout;
   mapCardElement.querySelector('.popup__features').innerHTML = '';
@@ -175,6 +192,7 @@ var renderMapCard = function (mapCard) {
   mapCardElement.querySelector('.popup__photos').innerHTML = '';
   mapCardElement.querySelector('.popup__photos').appendChild(renderPhotosList(mapCard.offer.photos));
   mapCardElement.querySelector('.popup__avatar').src = mapCard.author.avatar;
+
   return mapCardElement;
 };
 
@@ -184,4 +202,5 @@ var insertMapCard = function () {
   fragment.appendChild(renderMapCard(advertisments[0]));
   mapElement.insertBefore(fragment, mapFilters);
 };
+
 insertMapCard();
