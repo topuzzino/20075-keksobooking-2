@@ -21,11 +21,28 @@ var LOCATION_MIN_Y = 130;
 var LOCATION_MAX_Y = 630;
 var PIN_HEIGHT = 70;
 var PIN_WIDTH = 50;
+var INITIAL_MAIN_PIN_HEIGHT = 65;
+var INITIAL_MAIN_PIN_WIDTH = 65;
+var ACTIVE_MAIN_PIN_HEIGHT = 77;
 var PRICE_TEXT = '₽/ночь';
 var ROOMS_TEXT = ' комнаты для ';
 var GUESTS_TEXT = ' гостей';
 var CHECKIN_TEXT = 'Заезд после ';
 var CHECKOUT_TEXT = ', выезд до ';
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
+
+// Finding nessersary elements in DOM
+var mapElement = document.querySelector('.map');
+var mapPinsList = document.querySelector('.map__pins');
+var mapFilters = document.querySelector('.map__filters-container');
+var mapPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
+var mapCardTemplate = document.querySelector('template').content.querySelector('.map__card');
+var photoTemplate = document.querySelector('template').content.querySelector('.popup__photo');
+var adForm = document.querySelector('.ad-form');
+var adFormFieldsets = adForm.querySelectorAll('fieldset');
+var mainPin = mapElement.querySelector('.map__pin--main');
+var addressInput = adForm.querySelector('#address');
 
 // Function for getting a random element from an array
 var getRandomElement = function (array) {
@@ -50,6 +67,33 @@ var getArrayLength = function (array) {
   return arrayClone;
 };
 
+// Initial setting of the map: adding the attribut "disabled" to the fields
+var disableForm = function () {
+  adFormFieldsets.forEach(function (item) {
+    item.setAttribute('disabled', 'disabled');
+  });
+};
+
+// Function for showing/activating the map
+var enableMap = function () {
+  mapElement.classList.remove('map--faded');
+};
+
+// Function for activating the form
+var enableForm = function () {
+  adForm.classList.remove('ad-form--disabled');
+  adFormFieldsets.forEach(function (item) {
+    item.removeAttribute('disabled');
+  });
+};
+
+// Function for для filling in the fields in the form, according to the x & y position of the main pin
+var setAddress = function (height) {
+  var mainPinX = Math.round(mainPin.offsetLeft + INITIAL_MAIN_PIN_WIDTH / 2);
+  var mainPinY = Math.round(mainPin.offsetTop + height);
+  addressInput.value = mainPinX + ', ' + mainPinY;
+};
+
 // We are forming here an array of avatars and mix them
 var getAvatarsArray = function () {
   var avatars = [];
@@ -64,17 +108,6 @@ var getAvatarsArray = function () {
 };
 
 var avatars = getAvatarsArray();
-
-// Finding the map in DOM and show it
-var mapElement = document.querySelector('.map');
-mapElement.classList.remove('map--faded');
-
-// Finding the block, where we'll be putting the elements and templates
-var mapPinsList = document.querySelector('.map__pins');
-var mapFilters = document.querySelector('.map__filters-container');
-var mapPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
-var mapCardTemplate = document.querySelector('template').content.querySelector('.map__card');
-var photoTemplate = document.querySelector('template').content.querySelector('.popup__photo');
 
 // Mixing the names in random order, we don't need them repeat
 var adTitle = OFFER_TITLES.sort(compareRandom);
@@ -123,6 +156,16 @@ var renderMapPin = function (mapPin) {
   mapPinElement.querySelector('img').src = mapPin.author.avatar;
   mapPinElement.querySelector('img').alt = mapPin.offer.title;
 
+  mapPinElement.addEventListener('click', function () {
+    openMapCard(mapPin);
+  });
+
+  mapPinElement.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      openMapCard(mapPin);
+    }
+  });
+
   return mapPinElement;
 };
 
@@ -134,8 +177,6 @@ var renderMapPinsList = function () {
   }
   mapPinsList.appendChild(fragment);
 };
-
-renderMapPinsList();
 
 // Function for translating the flat types
 var translateType = function (type) {
@@ -176,6 +217,12 @@ var renderPhotosList = function (photosList) {
   return fragment;
 };
 
+var OnMapCardEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closeMapCard();
+  }
+};
+
 // Function for creating a DOM-element of the ad and filling in the data from the array
 var renderMapCard = function (mapCard) {
   var mapCardElement = mapCardTemplate.cloneNode(true);
@@ -193,14 +240,50 @@ var renderMapCard = function (mapCard) {
   mapCardElement.querySelector('.popup__photos').appendChild(renderPhotosList(mapCard.offer.photos));
   mapCardElement.querySelector('.popup__avatar').src = mapCard.author.avatar;
 
+  var popupClose = mapCardElement.querySelector('.popup__close');
+  popupClose.addEventListener('click', closeMapCard);
+  popupClose.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      closeMapCard();
+    }
+  });
+  document.addEventListener('keydown', OnMapCardEscPress);
+
   return mapCardElement;
 };
 
-// Function for placing the ad into the html-layout
-var insertMapCard = function () {
+// Function for placing the ad into the html-layout - open the nessesary ad and close previos one
+var openMapCard = function (mapCard) {
+  var card = mapElement.querySelector('.map__card');
+  if (card) {
+    closeMapCard();
+  }
   var fragment = document.createDocumentFragment();
-  fragment.appendChild(renderMapCard(advertisments[0]));
+  fragment.appendChild(renderMapCard(mapCard));
   mapElement.insertBefore(fragment, mapFilters);
 };
 
-insertMapCard();
+// Close the ad, remove the event listener
+var closeMapCard = function () {
+  var popup = document.querySelector('.map__card');
+  mapElement.removeChild(popup);
+  document.removeEventListener('keydown', OnMapCardEscPress);
+};
+
+// Event listener for the main pin
+var mainPinMouseupHandler = function () {
+  enableMap();
+  enableForm();
+  renderMapPinsList();
+  setAddress(ACTIVE_MAIN_PIN_HEIGHT);
+  mainPin.removeEventListener('mouseup', mainPinMouseupHandler);
+};
+
+// Function for activation of the page
+var enablePage = function () {
+  disableForm();
+  setAddress(INITIAL_MAIN_PIN_HEIGHT / 2);
+  mainPin.addEventListener('mouseup', mainPinMouseupHandler);
+};
+
+enablePage();
