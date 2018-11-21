@@ -318,6 +318,12 @@ typeField.addEventListener('change', function (evt) {
   setMinPrice(minPrice[evt.target.value]);
 });
 
+// By pressing "submit" prove that the price is not less than minimal set for the appartment type
+var submit = adForm.querySelector('.ad-form__element--submit');
+submit.addEventListener('click', function () {
+  priceInput.min = minPrice[typeField.value];
+});
+
 // Setting the correlation between check-in and check-out
 checkInField.addEventListener('change', function (evt) {
   checkOutField.value = evt.target.value;
