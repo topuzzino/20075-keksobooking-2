@@ -249,12 +249,10 @@ var renderMapCard = function (mapCard) {
       closeMapCard();
     }
   });
+  document.addEventListener('keydown', onMapCardEscPress);
 
   return mapCardElement;
 };
-
-// Event listener closes the ad by pressing Escape
-document.addEventListener('keydown', onMapCardEscPress);
 
 // Function for placing the ad into the html-layout - open the nessesary ad and close previos one
 var openMapCard = function (mapCard) {
