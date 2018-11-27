@@ -157,6 +157,7 @@ fieldset {
   font-weight: 700;
   text-align: center;
   color: #ffffff;
+  font-family: "Roboto", "Arial", sans-serif;
 }
 
 .map--faded .map__overlay {

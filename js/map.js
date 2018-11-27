@@ -2,7 +2,7 @@
 
 // Data for the array of ads
 var ADS_AMOUNT = 8;
-var OFFER_TITLES = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
+var OFFER_TITLES = ['Big cozy flat', 'Small comfortless flat', 'Huge wonderful palace', 'Small terrible palace', 'Beautiful guest small house', 'Ugly unfriendly small house', 'Cozy bungalo far from the sea', 'Not cozy bungalo in water'];
 var OFFER_TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var CHECK_TIMES = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
@@ -25,11 +25,11 @@ var PIN_WIDTH = 50;
 var INITIAL_MAIN_PIN_HEIGHT = 65;
 var MAIN_PIN_WIDTH = 65;
 var ACTIVE_MAIN_PIN_HEIGHT = 77;
-var PRICE_TEXT = '₽/ночь';
-var ROOMS_TEXT = ' комнаты для ';
-var GUESTS_TEXT = ' гостей';
-var CHECKIN_TEXT = 'Заезд после ';
-var CHECKOUT_TEXT = ', выезд до ';
+var PRICE_TEXT = '₽/night';
+var ROOMS_TEXT = ' rooms for ';
+var GUESTS_TEXT = ' guests';
+var CHECKIN_TEXT = 'Check-in after ';
+var CHECKOUT_TEXT = ', check-out till ';
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 var MAX_ROOM_NUMBER = 100;
