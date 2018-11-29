@@ -21,6 +21,7 @@
   var capacityField = adForm.querySelector('#capacity');
   var roomNumberField = adForm.querySelector('#room_number');
   var resetButton = adForm.querySelector('.ad-form__reset');
+  var successElement = document.querySelector('.success');
 
   // Initial setting of the map: adding the attribut "disabled" to the fields
   var disableForm = function () {
@@ -126,17 +127,50 @@
     });
   };
 
-  // Setting the page to the initial
-  resetButton.addEventListener('click', function () {
+  // Function for deactivating the page
+  var deactivatePage = function () {
     resetForm();
     window.map.resetMap();
     window.map.setInitialPage();
+  };
+
+  // Set the page to initial inactive setting
+  resetButton.addEventListener('click', function () {
+    deactivatePage();
+  });
+
+  // The popup with the message of successful filling out the form
+  var closeSuccessElement = function () {
+    successElement.classList.add('hidden');
+    document.removeEventListener('click', closeSuccessElement);
+    document.removeEventListener('keydown', successElementEscPressHandler);
+  };
+
+  var successElementEscPressHandler = function (evt) {
+    window.utils.isEscKeycode(evt, closeSuccessElement);
+  };
+
+  var adFormSubmitSuccessHandler = function () {
+    deactivatePage();
+    successElement.classList.remove('hidden');
+    document.activeElement.blur();
+    document.addEventListener('click', closeSuccessElement);
+    document.addEventListener('keydown', successElementEscPressHandler);
+  };
+
+  // The popup with the message of error
+  var adFormSubmitErrorHandler = function (errorMessage) {
+    window.createErrorMessage(errorMessage);
+  };
+
+  adForm.addEventListener('submit', function (evt) {
+    window.backend.upload(adFormSubmitSuccessHandler, adFormSubmitErrorHandler, new FormData(adForm));
+    evt.preventDefault();
   });
 
   window.form = {
     disableForm: disableForm,
     activateForm: activateForm,
     setAddress: setAddress,
-    resetForm: resetForm
   };
 })();
