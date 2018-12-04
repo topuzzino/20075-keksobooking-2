@@ -29,15 +29,21 @@
     xhr.timeout = TIMEOUT;
 
     xhr.open(method, url);
-    xhr.send((data) ? data : '');
+    xhr.send(data ? data : '');
+  };
+
+  // FUnction for sending data to the server
+  var upload = function (onLoad, onError, data) {
+    getXHR(onLoad, onError, 'POST', URL_UPLOAD, data);
+  };
+
+  // FUnction for receiving data from the server
+  var load = function (onLoad, onError) {
+    getXHR(onLoad, onError, 'GET', URL_LOAD);
   };
 
   window.backend = {
-    upload: function (onLoad, onError, data) {
-      getXHR(onLoad, onError, 'POST', URL_UPLOAD, data);
-    },
-    load: function (onLoad, onError) {
-      getXHR(onLoad, onError, 'GET', URL_LOAD);
-    }
+    upload: upload,
+    load: load
   };
 })();

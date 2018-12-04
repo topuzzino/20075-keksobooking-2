@@ -4,6 +4,7 @@
 (function () {
   var PIN_HEIGHT = 70;
   var PIN_WIDTH = 50;
+  var PIN_NUMBER = 5;
 
   var mapPinsList = document.querySelector('.map__pins');
   var mapPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
@@ -31,12 +32,20 @@
   };
 
   // Function for placing the pins into the block (successful download of data from the server)
-  var loadSuccessHandler = function (advertisments) {
+  var renderMapPinsList = function (advertisments) {
+    var pinsNumber = advertisments.length > PINS_NUMBER ? PINS_NUMBER : advertisments.length;
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < advertisments.length; i++) {
+    for (var i = 0; i < pinsNumber; i++) {
       fragment.appendChild(renderMapPin(advertisments[i]));
     }
     mapPinsList.appendChild(fragment);
+  };
+
+  // Successful data download from the server
+  var loadSuccessHandler = function (advertisments) {
+    renderMapPinsList(advertisments);
+    window.filters.getAdvertsData(advertisments);
+    window.filters.activateFilters();
   };
 
   // Popup with the error message in case of unsuccessful download
@@ -54,6 +63,7 @@
   window.pin = {
     loadSuccessHandler: loadSuccessHandler,
     loadErrorHandler: loadErrorHandler,
-    removeMapPins: removeMapPins
+    removeMapPins: removeMapPins,
+    renderMapPinsList: renderMapPinsList
   };
 })();

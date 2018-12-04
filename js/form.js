@@ -5,10 +5,10 @@
   var MAX_ROOM_NUMBER = 100;
   var NO_GUEST_VALUE = 0;
   var minPrice = {
-    bungalo: 0,
-    flat: 1000,
-    house: 5000,
-    palace: 10000
+    'bungalo': '0',
+    'flat': '1000',
+    'house': '5000',
+    'palace': '10000'
   };
 
   var adForm = document.querySelector('.ad-form');
@@ -121,6 +121,7 @@
   // Function for resetting the form
   var resetForm = function () {
     adForm.reset();
+    priceInput.placeholder = minPrice[typeField.value];
     adForm.classList.add('ad-form--disabled');
     inputs.forEach(function (input) {
       input.classList.remove('error');
@@ -131,6 +132,7 @@
   var deactivatePage = function () {
     resetForm();
     window.map.resetMap();
+    window.filters.resetFilters();
     window.map.setInitialPage();
   };
 

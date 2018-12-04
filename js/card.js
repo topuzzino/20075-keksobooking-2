@@ -2,31 +2,23 @@
 
 // Block for creating and placing the ad cards into the HTML-layout
 (function () {
-  var PRICE_TEXT = '₽/night';
-  var ROOMS_TEXT_ARRAY = ['room', 'room', 'rooms'];
-  var GUESTS_TEXT_ARRAY = ['guest', 'guests', 'guests'];
-  var CHECKIN_TEXT = 'Check-in after ';
-  var CHECKOUT_TEXT = ', check-out till ';
+  var text = {
+    PRICE: '₽/night',
+    ROOMS: ['room', 'room', 'rooms'],
+    GUESTS: ['guest', 'guests', 'guests'],
+    CHECKIN: 'Check-in after ',
+    CHECKOUT: ', check-out till '
+  };
+  var typeEnglishToRussian = {
+    'flat': 'flat',
+    'bungalo': 'bungalo',
+    'house': 'house',
+    'palace': 'palace'
+  };
 
   var mapFilters = document.querySelector('.map__filters-container');
   var mapCardTemplate = document.querySelector('template').content.querySelector('.map__card');
   var photoTemplate = document.querySelector('template').content.querySelector('.popup__photo');
-
-  // Function for translating the flat types
-  var translateType = function (type) {
-    switch (type) {
-      case 'flat':
-        return 'flat';
-      case 'bungalo':
-        return 'bungalo';
-      case 'house':
-        return 'house';
-      case 'palace':
-        return 'palace';
-      default:
-        return type;
-    }
-  };
 
   // Function for creating list of features
   var renderFeaturesList = function (featuresList) {
@@ -51,7 +43,7 @@
     return fragment;
   };
 
-  var MapCardEscPressHandler = function (evt) {
+  var mapCardEscPressHandler = function (evt) {
     window.utils.isEscKeycode(evt, closeMapCard);
   };
 
@@ -61,10 +53,10 @@
 
     mapCardElement.querySelector('.popup__title').textContent = mapCard.offer.title;
     mapCardElement.querySelector('.popup__text--address').textContent = mapCard.offer.address;
-    mapCardElement.querySelector('.popup__text--price').textContent = mapCard.offer.price + PRICE_TEXT;
-    mapCardElement.querySelector('.popup__type').textContent = translateType(mapCard.offer.type);
-    mapCardElement.querySelector('.popup__text--capacity').textContent = mapCard.offer.rooms + ' ' + window.utils.setDeclension(mapCard.offer.rooms, ROOMS_TEXT_ARRAY) + ' для ' + mapCard.offer.guests + ' ' + window.utils.setDeclension(mapCard.offer.guests, GUESTS_TEXT_ARRAY);     mapCardElement.querySelector('.popup__text--time').textContent = CHECKIN_TEXT + mapCard.offer.checkin + CHECKOUT_TEXT + mapCard.offer.checkout;
-    mapCardElement.querySelector('.popup__text--time').textContent = CHECKIN_TEXT + mapCard.offer.checkin + CHECKOUT_TEXT + mapCard.offer.checkout;
+    mapCardElement.querySelector('.popup__text--price').textContent = mapCard.offer.price + text.PRICE;
+    mapCardElement.querySelector('.popup__type').textContent = typeEnglishToRussian[mapCard.offer.type];
+    mapCardElement.querySelector('.popup__text--capacity').textContent = mapCard.offer.rooms + ' ' + window.utils.setDeclension(mapCard.offer.rooms, text.ROOMS) + ' для ' + mapCard.offer.guests + ' ' + window.utils.setDeclension(mapCard.offer.guests, text.GUESTS);
+    mapCardElement.querySelector('.popup__text--time').textContent = text.CHECKIN + mapCard.offer.checkin + text.CHECKOUT + mapCard.offer.checkout;
     mapCardElement.querySelector('.popup__features').innerHTML = '';
     mapCardElement.querySelector('.popup__features').appendChild(renderFeaturesList(mapCard.offer.features));
     mapCardElement.querySelector('.popup__description').textContent = mapCard.offer.description;
@@ -77,7 +69,7 @@
     popupClose.addEventListener('keydown', function (evt) {
       window.utils.isEnterKeycode(evt, closeMapCard);
     });
-    document.addEventListener('keydown', MapCardEscPressHandler);
+    document.addEventListener('keydown', mapCardEscPressHandler);
 
     return mapCardElement;
   };
@@ -100,12 +92,11 @@
       return;
     }
     window.map.mapElement.removeChild(popup);
-    document.removeEventListener('keydown', MapCardEscPressHandler);
+    document.removeEventListener('keydown', mapCardEscPressHandler);
   };
 
   window.card = {
     openMapCard: openMapCard,
     closeMapCard: closeMapCard
   };
-
 })();

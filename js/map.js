@@ -15,11 +15,18 @@
   window.mainPinInactiveY = mainPin.offsetTop;
   window.mainPinInactiveX = mainPin.offsetLeft;
 
+  // Activate the page from the keyboard
+  var mainPinEnterPressHandler = function (evt) {
+    window.utils.isEnterKeycode(evt, activatePage);
+    window.form.setAddress(MAIN_PIN_WIDTH, ACTIVE_MAIN_PIN_HEIGHT, mainPin);
+    mainPin.removeEventListener('keydown', mainPinEnterPressHandler);
+  };
+
   // Function for activating the page
   var setInitialPage = function () {
     window.form.disableForm();
     window.form.setAddress(INITIAL_MAIN_PIN_HEIGHT / 2);
-    mainPin.addEventListener('mouseup', mainPinMouseupHandler);
+    mainPin.addEventListener('keydown', mainPinEnterPressHandler);
     window.pageActivated = false;
   };
 
@@ -30,13 +37,11 @@
     mapElement.classList.remove('map--faded');
   };
 
-  // Event listener for the main pin
-  var mainPinMouseupHandler = function () {
+  // FUnction for activating the page
+  var activatePage = function () {
     activateMap();
     window.form.activateForm();
     window.backend.load(window.pin.loadSuccessHandler, window.pin.loadErrorHandler);
-    window.form.setAddress(MAIN_PIN_WIDTH, ACTIVE_MAIN_PIN_HEIGHT, mainPin);
-    mainPin.removeEventListener('mouseup', mainPinMouseupHandler);
     window.pageActivated = true;
   };
 
@@ -58,11 +63,11 @@
       y: evt.clientY
     };
 
-    var onMouseMove = function (moveEvt) {
+    var mainPinMouseMoveHandler = function (moveEvt) {
       moveEvt.preventDefault();
 
       if (!window.pageActivated) {
-        mainPinMouseupHandler();
+        activatePage();
       }
 
       window.form.setAddress(MAIN_PIN_WIDTH, ACTIVE_MAIN_PIN_HEIGHT, mainPin);
@@ -110,21 +115,21 @@
       mainPin.style.left = newCoordsX + 'px';
     };
 
-    var onMouseUp = function (upEvt) {
+    var mainPinMouseUpHandler = function (upEvt) {
       upEvt.preventDefault();
 
       if (!window.pageActivated) {
-        mainPinMouseupHandler();
+        activatePage();
       }
 
       window.form.setAddress(MAIN_PIN_WIDTH, ACTIVE_MAIN_PIN_HEIGHT, mainPin);
 
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
+      document.removeEventListener('mousemove', mainPinMouseMoveHandler);
+      document.removeEventListener('mouseup', mainPinMouseUpHandler);
     };
 
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
+    document.addEventListener('mousemove', mainPinMouseMoveHandler);
+    document.addEventListener('mouseup', mainPinMouseUpHandler);
   });
 
   window.map = {
