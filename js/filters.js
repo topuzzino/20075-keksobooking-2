@@ -3,7 +3,7 @@
 // Block for working with filters
 (function () {
   var ANY_VALUE = 'any';
-  var price {
+  var price = {
     LOW: 10000,
     HIGH: 50000
   };

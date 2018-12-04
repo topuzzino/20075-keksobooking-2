@@ -23,9 +23,9 @@
   };
 
   // Function for activating the page
-  var setInitialPage = function () {
+    var setInitialPage = function () {
     window.form.disableForm();
-    window.form.setAddress(INITIAL_MAIN_PIN_HEIGHT / 2);
+    window.form.setAddress(MAIN_PIN_WIDTH, INITIAL_MAIN_PIN_HEIGHT / 2, mainPin);
     mainPin.addEventListener('keydown', mainPinEnterPressHandler);
     window.pageActivated = false;
   };

@@ -46,7 +46,7 @@
 
   typeField.addEventListener('change', function (evt) {
     setMinPrice(minPrice[evt.target.value]);
-  });
+});
 
   // By pressing "submit" prove that the price is not less than minimal set for the appartment type
   var submit = adForm.querySelector('.ad-form__element--submit');
@@ -173,6 +173,6 @@
   window.form = {
     disableForm: disableForm,
     activateForm: activateForm,
-    setAddress: setAddress,
+    setAddress: setAddress
   };
 })();
