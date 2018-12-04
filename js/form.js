@@ -99,9 +99,9 @@
   roomNumberField.addEventListener('change', setCapacity);
 
   // Function for для filling in the fields in the form, according to the x & y position of the main pin
-  var setAddress = function (height) {
-    var mainPinX = Math.round(mainPin.offsetLeft + MAIN_PIN_WIDTH / 2);
-    var mainPinY = Math.round(mainPin.offsetTop + height);
+  var setAddress = function (width, height, pin) {
+    var mainPinX = Math.round(pin.offsetLeft + width / 2);
+    var mainPinY = Math.round(pin.offsetTop + height);
     addressInput.value = mainPinX + ', ' + mainPinY;
   };
 
